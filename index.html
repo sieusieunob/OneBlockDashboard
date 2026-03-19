@@ -85,6 +85,8 @@
             padding: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
+            min-width: 0; /* Fix Chart.js breaking CSS Grid width on Mobile */
+            word-wrap: break-word; /* Prevent text overflow */
         }
 
         .glass-card:hover {
@@ -141,7 +143,7 @@
 
         @media (max-width: 1024px) {
             .charts-row {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
         }
 
@@ -154,7 +156,7 @@
 
         @media (max-width: 1024px) {
             .half-row {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
         }
 
@@ -185,7 +187,7 @@
 
         @media (max-width: 1024px) {
             .macro-container, .custom-grid-1, .custom-grid-2 {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
         }
 
@@ -293,9 +295,11 @@
         @media (max-width: 768px) {
             body { padding: 1rem; }
             h1 { font-size: 1.8rem; }
-            .section-title { font-size: 1.4rem; margin-top: 1.5rem; }
+            .section-title { font-size: 1.4rem; margin-top: 1.5rem; word-break: break-word; }
             .glass-card { padding: 1rem; }
+            .glass-card h2 { font-size: 1.1rem; }
             .chart-container-large { height: 280px !important; }
+            .chart-container-medium { height: 250px !important; }
             .stats-card-row { grid-template-columns: 1fr; }
             .stat-num { font-size: 1.3rem; }
             .half-row { grid-template-columns: 1fr; }
