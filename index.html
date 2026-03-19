@@ -231,6 +231,17 @@
             margin-bottom: 1rem;
         }
 
+        .source-tag a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .source-tag a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
         /* Stats Cards */
         .stats-card-row {
             display: grid;
@@ -355,7 +366,7 @@
                 <div class="chart-container-medium"><canvas id="etfChart"></canvas></div>
                 <div class="chart-caption">
                     <strong>Phân tích:</strong> 6 phiên mua tiếp. Đỉnh điểm ngày 10/03 cấu trúc cầu đã vượt cung khai thác.
-                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: TradingView, CoinGlass</span>
+                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: <a href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSD" target="_blank">TradingView</a>, <a href="https://www.coinglass.com/bitcoin-etf" target="_blank">CoinGlass</a></span>
                 </div>
             </div>
             <div class="glass-card insight-item" style="border-top: 3px solid var(--danger);">
@@ -363,7 +374,7 @@
                 <div class="chart-container-medium"><canvas id="cexChart"></canvas></div>
                 <div class="chart-caption">
                     <strong>Phân tích:</strong> Cảnh báo đỏ (Red Flag). Lượng BTC chuyển lên Sàn CEX tăng vọt mức cao nhất năm khi BTC chạm $74k.
-                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: The Block, Whale Alert</span>
+                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: <a href="https://www.theblock.co/data/crypto-markets/spot" target="_blank">The Block</a>, <a href="https://x.com/whale_alert" target="_blank">Whale Alert</a></span>
                 </div>
             </div>
             <div class="glass-card insight-item" style="border-top: 3px solid #3b82f6;">
@@ -371,7 +382,7 @@
                 <div class="chart-container-medium"><canvas id="govChart"></canvas></div>
                 <div class="chart-caption">
                     <strong>Phân tích:</strong> Khối lượng ~328k BTC của Mỹ đã chuyển đổi từ tài sản thanh lý sang Dự trữ Chiến lược (Sắc lệnh 2025).
-                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: Arkham Intelligence, Whitehouse.gov</span>
+                    <span class="source-tag" style="margin-top:0.5rem; display:block;">Nguồn: <a href="https://platform.arkhamintelligence.com/explorer/entity/usg" target="_blank">Arkham Intelligence</a>, <a href="https://www.whitehouse.gov/briefing-room/presidential-actions/" target="_blank">Whitehouse.gov</a></span>
                 </div>
             </div>
         </div>
@@ -395,7 +406,7 @@
                 <h2>Tài Sản Định Giá Theo USD (Billions)</h2>
                 <div class="chart-container-large"><canvas id="individualsStackedChart"></canvas></div>
                 <div class="chart-caption">
-                    <span class="source-tag">Nguồn: Forbes/Arkham. Chỉ tính tài sản Crypto và cổ phần doanh nghiệp.</span>
+                    <span class="source-tag">Nguồn: <a href="https://www.forbes.com/digital-assets/" target="_blank">Forbes</a>/<a href="https://platform.arkhamintelligence.com/dashboards" target="_blank">Arkham</a>. Chỉ tính tài sản Crypto và cổ phần doanh nghiệp.</span>
                 </div>
             </div>
             <!-- Column 2: Allocation Overview Donut -->
