@@ -180,8 +180,11 @@
             margin-bottom: 3rem;
         }
 
+        .custom-grid-1 { grid-template-columns: 1.5fr 1fr 1fr; }
+        .custom-grid-2 { grid-template-columns: 1fr 1.5fr 1fr; }
+
         @media (max-width: 1024px) {
-            .macro-container {
+            .macro-container, .custom-grid-1, .custom-grid-2 {
                 grid-template-columns: 1fr;
             }
         }
@@ -292,10 +295,11 @@
             h1 { font-size: 1.8rem; }
             .section-title { font-size: 1.4rem; margin-top: 1.5rem; }
             .glass-card { padding: 1rem; }
-            .chart-container-large { height: 300px; }
+            .chart-container-large { height: 280px !important; }
             .stats-card-row { grid-template-columns: 1fr; }
             .stat-num { font-size: 1.3rem; }
             .half-row { grid-template-columns: 1fr; }
+            .chart-caption { font-size: 0.8rem; }
         }
 
         .chart-caption {
@@ -381,7 +385,7 @@
 
         <h2 class="section-title">II. Danh Mục Của Top 10 Cá Nhân Giàu Nhất Crypto (2026)</h2>
 
-        <div class="macro-container delay-2" style="grid-template-columns: 1.5fr 1fr 1fr;">
+        <div class="macro-container delay-2 custom-grid-1">
             <!-- Column 1: Stacked Bar -->
             <div class="glass-card">
                 <h2>Tài Sản Định Giá Theo USD (Billions)</h2>
@@ -410,7 +414,7 @@
 
         <!-- SECTION III: LTH & STH -->
         <h2 class="section-title">III. Hành Vi Market: Long-Term vs Short-Term Holders (LTH/STH)</h2>
-        <div class="macro-container delay-2" style="grid-template-columns: 1fr 1.5fr 1fr;">
+        <div class="macro-container delay-2 custom-grid-2">
 
             <div class="glass-card">
                 <h2>Tổng Quan Khối Lượng Ví (On-Chain)</h2>
