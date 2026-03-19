@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo On-Chain Bitcoin & LTH/STH (Tháng 03/2026)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --glass-bg: rgba(25, 30, 45, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-color: #F7931A;
+            /* Cam Bitcoin */
+            --accent-hover: #ffad4a;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --eth-blue: #627eea;
+            --usdt-green: #26a17b;
+            --lth-color: #3b82f6;
+            /* Xanh dương */
+            --sth-color: #f43f5e;
+            /* Hồng đỏ */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(247, 147, 26, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.05), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--accent-color);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(247, 147, 26, 0.3);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .metric h3 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .metric .value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .metric .trend {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .trend.up {
+            color: var(--success);
+        }
+
+        .trend.down {
+            color: var(--danger);
+        }
+
+        /* Multi-Chart Layout */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .half-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .half-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container-large {
+            position: relative;
+            height: 380px;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .chart-container-medium {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        /* Macro Section */
+        .macro-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .macro-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        .insights h2,
+        .glass-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .insight-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .insight-item p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .source-tag {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box.lth {
+            border-bottom: 3px solid var(--lth-color);
+        }
+
+        .stat-box.sth {
+            border-bottom: 3px solid var(--sth-color);
+        }
+
+        .stat-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+            animation-fill-mode: both;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Bảng Điều Khiển Dữ Liệu On-Chain Khối Lượng Toàn Cầu</h1>
+            <p>Phân Tích Vĩ Mô & Khối lượng Cá Nhân (Cập Nhật Tháng 03/2026)</p>
+        </header>
+
+        <!-- KPI Metrics -->
+        <h2 class="section-title delay-1">I. Phân Tích Vĩ Mô Lịch Sử (Macro Dashboards)</h2>
+        <div class="metrics-grid">
+            <div class="glass-card metric delay-1">
+                <h3>Dòng Tiền Ròng ETF (Tháng Này)</h3>
+                <div class="value">$2.8 tỷ USD</div>
+                <div class="trend up">▲ Lực Cầu TradFi Khổng Lồ</div>
+            </div>
+            <div class="glass-card metric delay-1">
+                <h3>Cá Voi Tích Lũy (16 Ngày Đầu)</h3>
+                <div class="value">+30,000 BTC</div>
+                <div class="trend up">▲ Nhóm 100-100k BTC</div>
+            </div>
+            <div class="glass-card metric delay-1">
+                <h3>Nạp Lên CEX Cục Bộ (16-17/03)</h3>
+                <div class="value">6,100 BTC/giờ</div>
+                <div class="trend down">▼ Rủi ro xả hàng ngắn hạn</div>
+            </div>
+            <div class="glass-card metric delay-1">
+                <h3>Khuynh Hướng Thị Trường</h3>
+                <div class="value" style="color: var(--success)">BULLISH</div>
+                <div class="trend up">▲ Kháng cự tại $74,000</div>
+            </div>
+        </div>
+
+        <div class="macro-container delay-2">
+            <div class="glass-card insight-item" style="border-top: 3px solid var(--success);">
+                <h4>1. Tốc Độ Dòng Tiền Spot ETF</h4>
+                <p>6 phiên hút ròng liên tiếp. Đỉnh điểm ngày 10/03 cấu trúc cầu đã vượt cung khai thác.</p>
+                <span class="source-tag">Nguồn: TradingView, CoinGlass</span>
+                <div class="chart-container-medium"><canvas id="etfChart"></canvas></div>
+            </div>
+            <div class="glass-card insight-item" style="border-top: 3px solid var(--danger);">
+                <h4>2. Rủi Ro Cá Voi Chốt Lời Khủng</h4>
+                <p>Cảnh báo đỏ (Red Flag). Lượng BTC chuyển lên Sàn CEX tăng vọt mức cao nhất năm khi BTC chạm $74k.</p>
+                <span class="source-tag">Nguồn: The Block, Whale Alert</span>
+                <div class="chart-container-medium"><canvas id="cexChart"></canvas></div>
+            </div>
+            <div class="glass-card insight-item" style="border-top: 3px solid #3b82f6;">
+                <h4>3. Kho Dự Trữ Chiến Lược Hoa Kỳ</h4>
+                <p>Khối lượng ~328k BTC của Mỹ đã chuyển đổi từ tài sản thanh lý sang Dự trữ Chiến lược (Sắc lệnh 2025).
+                </p>
+                <span class="source-tag">Nguồn: Arkham Intelligence, Whitehouse.gov</span>
+                <div class="chart-container-medium"><canvas id="govChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="charts-row delay-2">
+            <div class="glass-card">
+                <h2>Top 10 Thực Thể Nắm Giữ Bitcoin Xuyên Suốt</h2>
+                <div class="chart-container-large"><canvas id="holdersChart"></canvas></div>
+            </div>
+            <div class="glass-card">
+                <h2>Tỷ Trọng BTC: Top 20 vs Cung Lưu Hành</h2>
+                <div class="chart-container-large"><canvas id="supplyDonutChart"></canvas></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">II. Danh Mục Của Top 10 Cá Nhân Giàu Nhất Crypto (2026)</h2>
+
+        <div class="macro-container delay-2" style="grid-template-columns: 1.5fr 1fr 1fr;">
+            <!-- Column 1: Stacked Bar -->
+            <div class="glass-card">
+                <h2>Tài Sản Định Giá Theo USDT (Billions)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Nguồn: Forbes/Arkham.
+                    Chỉ tính tài sản Crypto và cổ phần doanh nghiệp.</p>
+                <div class="chart-container-large"><canvas id="individualsStackedChart"></canvas></div>
+            </div>
+            <!-- Column 2: Allocation Overview Donut -->
+            <div class="glass-card">
+                <h2>Phân Bổ Danh Mục Điển Hình (% Mảng Vốn)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Altcoins chiếm đa số
+                    do CZ sở hữu lượng lớn BNB, cùng với các nhà sáng lập TRX, XRP.</p>
+                <div class="chart-container-large" style="height: 330px;"><canvas id="allocationDonutChart"></canvas>
+                </div>
+            </div>
+            <!-- Column 3: Altcoin Breakdown Donut -->
+            <div class="glass-card">
+                <h2>Cơ Cấu Chi Tiết 71 Tỷ USD Altcoins</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Bẻ gãy lớp Altcoins:
+                    Sự áp đảo của BNB hệ sinh thái Binance, tiếp bước là dự án lâu đời XRP.</p>
+                <div class="chart-container-large" style="height: 330px;"><canvas id="altcoinDonutChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- SECTION III: LTH & STH -->
+        <h2 class="section-title">III. Hành Vi Market: Long-Term vs Short-Term Holders (LTH/STH)</h2>
+        <div class="macro-container delay-2" style="grid-template-columns: 1fr 1.5fr 1fr;">
+
+            <div class="glass-card">
+                <h2>Tổng Quan Khối Lượng Ví (On-Chain)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Người Nắm Giữ Dài Hạn (LTH) > 155 ngày và Người Nắm Giữ Ngắn Hạn (STH) < 155 ngày. </p>
+
+                        <div class="stats-card-row" style="margin-top: 2rem;">
+                            <div class="stat-box lth">
+                                <div class="stat-label">Số Lượng Ví LTH</div>
+                                <div class="stat-num">~41M</div>
+                                <div class="stat-label">Nắm giữ: 14.9M BTC</div>
+                            </div>
+                            <div class="stat-box sth">
+                                <div class="stat-label">Số Lượng Ví STH</div>
+                                <div class="stat-num">~16M</div>
+                                <div class="stat-label">Nắm giữ: 3.2M BTC</div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="margin-top: 2rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px;">
+                            <p style="font-size: 0.85rem; color: #fff;"><strong>Kết luận:</strong> Nguồn cung của LTH
+                                đang chiếm ~75% toàn bộ mạng lưới, chứng tỏ lớp nền tảng kim cương của Bitcoin cực kỳ
+                                vững chắc dù giá ở ATH (All Time High).</p>
+                        </div>
+            </div>
+
+            <!-- Tỷ Lệ Lãi Lỗ -->
+            <div class="glass-card">
+                <h2>Tỷ Lệ Báo Lãi & Lỗ (MVRV Profitability)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Đo lường chi phí gốc đã bỏ ra của toàn bộ ví mạng lưới so với mức giá $74,000.
+                </p>
+                <div class="chart-container-large" style="height: 280px;">
+                    <canvas id="profitChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Điểm hòa vốn (Glassnode Realized Price Line Chart) -->
+            <div class="glass-card">
+                <h2>Chi Phí Gốc Theo Chu Kỳ Lịch Sử (Glassnode)</h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Biến động Giá Thực Tế (Spot) so sánh với biến động Giá Mua Gốc trung bình (Realized) của STH và LTH.
+                </p>
+                <div class="chart-container-large" style="height: 280px;">
+                    <canvas id="breakEvenLineChart"></canvas> <!-- Changed from breakEvenStackedChart -->
+                </div>
+                <div style="margin-top: -1.5rem; text-align: center;">
+                    <span style="font-size: 0.8rem; color: #f43f5e; display:block;">Cảnh Báo (T3/2026):</span>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Giá Spot ($74k) đang nằm sát ngưỡng
+                        Vốn STH ($59.8k). Rủi ro Panic Sell rất lớn nếu chạm cắt.</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.plugins.legend.labels.color = '#94a3b8';
+
+        const tooltipConfig = {
+            backgroundColor: 'rgba(11, 15, 25, 0.95)', titleColor: '#fff', bodyColor: '#F7931A',
+            padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1
+        };
+
+        // Chart 1: ETF
+        new Chart(document.getElementById('etfChart').getContext('2d'), { type: 'bar', data: { labels: ['9/3', '10/3', '11/3', '12/3', '13/3', '14/3', '17/3'], datasets: [{ data: [250, 934, 450, 310, 182, 120, 199.4], backgroundColor: 'rgba(16, 185, 129, 0.8)' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipConfig }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } } } } });
+        // Chart 2: CEX
+        new Chart(document.getElementById('cexChart').getContext('2d'), { type: 'line', data: { labels: ['0h 16/3', '6h', '12h', '18h', '0h 17/3', '6h', '12h', '18h'], datasets: [{ data: [1200, 1500, 2100, 3400, 2800, 4200, 6100, 4500], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipConfig }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } } } } });
+        // Chart 3: Gov
+        new Chart(document.getElementById('govChart').getContext('2d'), { type: 'line', data: { labels: ['2023', '2024', '2024', '2025', '2026'], datasets: [{ data: [214000, 210000, 203000, 328000, 328000], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, stepped: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipConfig }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } } } } });
+        // Chart 4: Top 10 Bars
+        new Chart(document.getElementById('holdersChart').getContext('2d'), { type: 'bar', data: { labels: ['BlackRock', 'MicroStrategy', 'Fidelity', 'CP Mỹ', 'Grayscale', 'CP TQ', 'Block.one', 'Tether', 'Mt. Gox', 'MARA'], datasets: [{ data: [775000, 739000, 470000, 328000, 290000, 190000, 164000, 96300, 80000, 53250], backgroundColor: 'rgba(247, 147, 26, 0.8)' }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: tooltipConfig }, scales: { x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }, y: { grid: { display: false } } } } });
+        // Chart 5: Supply Donut
+        new Chart(document.getElementById('supplyDonutChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Top 20 Thực Thể Nắm Giữ', 'Thế Giới Còn Lại'], datasets: [{ data: [6197000, 13603000], backgroundColor: ['#F7931A', 'rgba(148, 163, 184, 0.2)'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } } });
+        // Chart 6: Individuals Stacked
+        new Chart(document.getElementById('individualsStackedChart').getContext('2d'), { type: 'bar', data: { labels: ['C. Zhao (CZ)', 'B. Armstrong', 'C. Larsen', 'G. Devasini', 'P. Ardoino', 'JL. van der Velde', 'M. Saylor', 'J. Sun', 'M. Novogratz', 'D. Trump'], datasets: [{ label: 'Bitcoin (BTC)', data: [3.0, 2.0, 0.0, 1.5, 1.0, 1.0, 8.5, 1.0, 4.0, 0.0], backgroundColor: '#F7931A', stack: 'Stack 0' }, { label: 'Altcoins (ETH, BNB...)', data: [40.0, 3.0, 11.5, 2.0, 1.0, 1.0, 0.0, 5.0, 2.5, 5.0], backgroundColor: '#627eea', stack: 'Stack 0' }, { label: 'Stable/Equity', data: [2.1, 8.0, 0.5, 8.0, 7.5, 7.5, 0.5, 2.5, 1.0, 2.2], backgroundColor: '#26a17b', stack: 'Stack 0' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: tooltipConfig }, scales: { x: { grid: { display: false }, ticks: { font: { size: 11 } } }, y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } } } } });
+        // Chart 7: Allocation Donut
+        new Chart(document.getElementById('allocationDonutChart').getContext('2d'), { type: 'doughnut', data: { labels: ['Bitcoin (BTC)', 'Altcoins (ETH, BNB...)', 'Stablecoins & Cổ phần'], datasets: [{ data: [22.0, 71.0, 39.8], backgroundColor: ['#F7931A', '#627eea', '#26a17b'], borderWidth: 0, hoverOffset: 10 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } } });
+        // Chart 8: Altcoin Details
+        new Chart(document.getElementById('altcoinDonutChart').getContext('2d'), { type: 'doughnut', data: { labels: ['BNB', 'XRP', 'ETH & L2', 'TRX', 'Meme/Others'], datasets: [{ data: [40.0, 11.5, 10.5, 3.0, 6.0], backgroundColor: ['#f3ba2f', '#23292f', '#627eea', '#ef4444', '#94a3b8'], borderWidth: 0, hoverOffset: 10 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } } });
+
+        // Chart 9: Profitability 
+        new Chart(document.getElementById('profitChart').getContext('2d'), { type: 'bar', data: { labels: ['Nhóm Dài Hạn (LTH)', 'Nhóm Ngắn Hạn (STH)'], datasets: [{ label: 'Đang Có Lãi (%)', data: [99.5, 85.0], backgroundColor: '#10b981', borderWidth: 0, borderRadius: 6 }, { label: 'Đang Chịu Lỗ (%)', data: [0.5, 15.0], backgroundColor: '#ef4444', borderWidth: 0, borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: tooltipConfig }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, min: 0, max: 100, ticks: { callback: function (value) { return value + '%'; } } } } } });
+
+        // --- NEW MODIFIED: 10. Break-even Point Chart (Line Chart like Glassnode) ---
+        const ctxBreak = document.getElementById('breakEvenLineChart').getContext('2d');
+        new Chart(ctxBreak, {
+            type: 'line',
+            data: {
+                labels: ['Q1/23', 'Q3/23', 'Q1/24', 'Q3/24', 'Q1/25', 'Q3/25', 'T3/26'],
+                datasets: [
+                    {
+                        label: 'Giá BTC Hiện Tại (Spot)',
+                        data: [28000, 27000, 68000, 60000, 85000, 65000, 74000],
+                        borderColor: '#10b981', // Màu xanh lục biểu hiện giá BTC Market
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Giá Vốn STH (Short-Term)',
+                        data: [22000, 28000, 52000, 63000, 72000, 68000, 59800],
+                        borderColor: '#f43f5e', // Màu đỏ hồng STH
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [4, 4], // Vẽ đứt nét
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Giá Vốn LTH (Long-Term)',
+                        data: [21000, 20500, 20800, 21500, 22500, 23800, 24500],
+                        borderColor: '#3b82f6', // Xanh dương cho LTH
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } },
+                    tooltip: {
+                        backgroundColor: 'rgba(11, 15, 25, 0.95)', titleColor: '#fff',
+                        callbacks: {
+                            label: function (context) { return context.dataset.label + ': $' + new Intl.NumberFormat('en-US').format(context.parsed.y); }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { callback: function (value) { return '$' + value / 1000 + 'k'; }, font: { size: 11 } }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
